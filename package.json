@@ -1,0 +1,27 @@
+{
+  "name": "connecthub_api",
+  "version": "1.0.0",
+  "description": "---",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KhriseanStewart/ConnectHub_NodeJs_API.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/KhriseanStewart/ConnectHub_NodeJs_API/issues"
+  },
+  "homepage": "https://github.com/KhriseanStewart/ConnectHub_NodeJs_API#readme",
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "dotenv": "^17.3.1",
+    "express": "^5.2.1",
+    "jsonwebtoken": "^9.0.3",
+    "mongoose": "^9.2.3",
+    "nodemailer": "^8.0.1"
+  }
+}
