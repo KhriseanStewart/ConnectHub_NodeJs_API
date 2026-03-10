@@ -8,6 +8,11 @@ const profileSchema = new mongoose.Schema(
       required: true,
       unique: true,
     },
+    avatarUrl: {
+      type: String,
+      trim: true,
+      default: "",
+    },
     displayName: {
       type: String,
       trim: true,

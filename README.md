@@ -38,14 +38,14 @@ This API is intentionally scoped for a 4–6 week capstone:
 # 📊 Project Progress Tracker
 
 ## 🏗 Setup & Foundation
-- [*] Initialize Node project
-- [ ] Install dependencies
-- [ ] Setup Express server
-- [ ] Setup environment variables
-- [ ] Connect MongoDB
-- [ ] Create base folder structure
-- [ ] Add central error handler + response helpers
-- [ ] Test server health endpoint
+- [x] Initialize Node project
+- [x] Install dependencies
+- [x] Setup Express server
+- [x] Setup environment variables
+- [x] Connect MongoDB
+- [x] Create base folder structure
+- [x] Add central error handler + response helpers
+- [x] Test server health endpoint
 
 ## 🔐 Authentication
 - [ ] Firebase token verification middleware **OR** JWT middleware
@@ -53,30 +53,30 @@ This API is intentionally scoped for a 4–6 week capstone:
 - [ ] Create `GET /auth/me`
 
 ## 🧑 Profiles (CRUD)
-- [ ] Create/Update profile
-- [ ] Get current user profile
-- [ ] Delete profile
-- [ ] Validate inputs + return clean errors
+- [x] Create/Update profile
+- [x] Get current user profile
+- [x] Delete profile
+- [x] Validate inputs + return clean errors
 
 ## 🔍 Browse & Filtering
-- [ ] Browse profiles (exclude self)
-- [ ] Filter by location
-- [ ] Filter by interests
+- [x] Browse profiles (exclude self)
+- [x] Filter by location
+- [x] Filter by interests
 - [ ] Pagination (bonus)
 
 ## 📩 Requests & Connections
-- [ ] Send request
-- [ ] Prevent duplicates
-- [ ] Incoming requests
-- [ ] Outgoing requests
-- [ ] Accept/Decline request
-- [ ] Connections list
-- [ ] Remove connection
+- [x] Send request
+- [x] Prevent duplicates
+- [x] Incoming requests
+- [x] Outgoing requests
+- [x] Accept/Decline request
+- [x] Connections list
+- [x] Remove connection
 
 ## 🖼 Cloudflare R2 Uploads
-- [ ] Configure R2 client
-- [ ] Upload profile photo(s)
-- [ ] Store photo URL in profile
+- [x] Configure R2 client
+- [x] Upload profile photo(s)
+- [x] Store photo URL in profile
 - [ ] Delete/replace photo (optional)
 
 ## 🧪 Testing & Final Review

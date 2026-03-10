@@ -4,6 +4,9 @@ import { connectDB } from "./config/db.js";
 import { errorMiddleware } from "./middleware/error.middleware.js";
 import authRoutes from "./routes/auth.routes.js";
 import profilesRoutes from "./routes/profiles.routes.js";
+import browseRoutes from "./routes/browse.routes.js";
+import requestsRoutes from "./routes/requests.routes.js";
+import connectionsRoutes from "./routes/connection.routes.js";
 
 dotenv.config();
 
@@ -17,6 +20,9 @@ app.get("/", (req, res) => {
 
 app.use("/api/auth", authRoutes);
 app.use("/api/profiles", profilesRoutes);
+app.use("/api/browse", browseRoutes);
+app.use("/api/requests", requestsRoutes);
+app.use("/api/connections", connectionsRoutes);
 
 app.use(errorMiddleware);
 
