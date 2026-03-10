@@ -9,8 +9,8 @@ function getTransport() {
   const isProd = process.env.NODE_ENV === "production";
 
   if (!isProd) {
-    const user = process.env.MAILTRAP_USER;
-    const pass = process.env.MAILTRAP_PASS;
+    const user = process.env.MAIL_USER;
+    const pass = process.env.MAIL_PASS;
     if (!user || !pass) {
       throw new Error("MAIL_USER and MAIL_PASS are required in .env (Mailtrap SMTP settings)");
     }
