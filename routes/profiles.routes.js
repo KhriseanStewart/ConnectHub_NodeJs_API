@@ -5,6 +5,7 @@ import {
   updateProfile,
   deleteProfile,
   getProfileById,
+  getProfileByUserId,
   uploadAvatar,
   deleteAvatar,
 } from "../controllers/profile.controller.js";
@@ -28,6 +29,8 @@ router.delete("/delete", protect, deleteProfile);
 
 router.put("/avatar", protect, uploadAvatarMiddleware, handleUploadError, uploadAvatar);
 router.delete("/avatar", protect, deleteAvatar);
+
+router.get("/user/:userId", protect, getProfileByUserId);
 
 router.get("/:id", protect, getProfileById);
 
