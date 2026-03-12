@@ -80,6 +80,19 @@ export const getProfileById = asyncHandler(async (req, res, next) => {
   }
 });
 
+export const getProfileByUserId = asyncHandler(async (req, res, next) => {
+  try {
+    const { userId } = req.params;
+    const profile = await Profile.findOne({ user: userId });
+    if (!profile) {
+      return errorResponse(res, { statusCode: 404, message: "Profile not found" });
+    }
+    return successResponse(res, { statusCode: 200, message: "Profile fetched successfully", data: { profile } });
+  } catch (err) {
+    next(err);
+  }
+});
+
 export const uploadAvatar = asyncHandler(async (req, res) => {
   if (!isConfigured || !r2Client || !publicBaseUrl) {
     return errorResponse(res, { statusCode: 503, message: "Avatar upload is not configured" });
