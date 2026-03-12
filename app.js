@@ -33,7 +33,8 @@ connectDB()
         });
     })
     .catch((err) => {
-        console.error("Failed to connect to MongoDB:", err);
+        console.error("[MongoDB] Failed to connect:", err.message);
+        if (err.code) console.error("[MongoDB] Code:", err.code);
         process.exit(1);
     });
 
