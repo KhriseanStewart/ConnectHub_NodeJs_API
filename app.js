@@ -26,16 +26,19 @@ app.use("/api/connections", connectionsRoutes);
 
 app.use(errorMiddleware);
 
-connectDB()
+// Only start listening when running as a standalone server (not on Vercel serverless)
+if (!process.env.VERCEL) {
+  connectDB()
     .then(() => {
-        app.listen(port, () => {
-            console.log(`Server is running on port ${port}`);
-        });
+      app.listen(port, () => {
+        console.log(`Server is running on port ${port}`);
+      });
     })
     .catch((err) => {
-        console.error("[MongoDB] Failed to connect:", err.message);
-        if (err.code) console.error("[MongoDB] Code:", err.code);
-        process.exit(1);
+      console.error("[MongoDB] Failed to connect:", err.message);
+      if (err.code) console.error("[MongoDB] Code:", err.code);
+      process.exit(1);
     });
+}
 
 export default app;
