@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { successResponse, errorResponse } from "../utils/response.js";
 import { Message } from "../models/messages.js";
@@ -13,9 +14,17 @@ const ensureConnected = async (currentUserId, otherUserId) => {
   return { connection, pairKey };
 };
 
+const isValidUserId = (id) => id && mongoose.Types.ObjectId.isValid(id);
+
 export const getMessages = asyncHandler(async (req, res) => {
   const { otherUserId } = req.params;
   const currentUserId = req.user.id;
+  if (!isValidUserId(otherUserId)) {
+    return errorResponse(res, { statusCode: 400, message: "Invalid user ID" });
+  }
+  if (String(otherUserId) === String(currentUserId)) {
+    return errorResponse(res, { statusCode: 400, message: "Cannot get messages with yourself" });
+  }
 
   const { connection, pairKey } = await ensureConnected(currentUserId, otherUserId);
   if (!connection) {
@@ -34,6 +43,12 @@ export const getMessages = asyncHandler(async (req, res) => {
 export const sendMessage = asyncHandler(async (req, res) => {
   const { otherUserId } = req.params;
   const currentUserId = req.user.id;
+  if (!isValidUserId(otherUserId)) {
+    return errorResponse(res, { statusCode: 400, message: "Invalid user ID" });
+  }
+  if (String(otherUserId) === String(currentUserId)) {
+    return errorResponse(res, { statusCode: 400, message: "Cannot message yourself" });
+  }
   const { text, mediaUrl } = req.body;
 
   if (!text && !mediaUrl) {
@@ -85,6 +100,9 @@ export const getMessagedUsers = asyncHandler(async (req, res) => {
 export const deleteConversation = asyncHandler(async (req, res) => {
   const { otherUserId } = req.params;
   const currentUserId = req.user.id;
+  if (!isValidUserId(otherUserId)) {
+    return errorResponse(res, { statusCode: 400, message: "Invalid user ID" });
+  }
 
   const { connection, pairKey } = await ensureConnected(currentUserId, otherUserId);
   if (!connection) {
@@ -124,45 +142,3 @@ export const deleteAllConversations = asyncHandler(async (req, res) => {
     message: "All conversations deleted successfully",
   });
 });
-
-const getMessages = async (req, res) => {
-    const { otherUserId } = req.params;
-    const { user } = req;
-    const messages = await Message.find({
-        $or: [{ fromUser: user._id, toUser: otherUserId }, { fromUser: otherUserId, toUser: user._id }],
-    });
-    res.status(200).json(messages);
-};
-
-const sendMessage = async (req, res) => {
-    const { otherUserId } = req.params;
-    const { user } = req;
-    const { text } = req.body;
-    const message = await Message.create({
-        fromUser: user._id,
-        toUser: otherUserId,
-        message,
-    });
-    res.status(201).json(message);
-};
-
-const getMessagedUsers = async (req, res) => {
-    const { user } = req;
-    const messagedUsers = await Message.find({ $or: [{ fromUser: user._id }, { toUser: user._id }] }).distinct("toUser");
-    res.status(200).json(messagedUsers);
-};
-
-const deleteConversation = async (req, res) => {
-    const { otherUserId } = req.params;
-    const { user } = req;
-    await Message.deleteMany({ $or: [{ fromUser: user._id, toUser: otherUserId }, { fromUser: otherUserId, toUser: user._id }] });
-    res.status(200).json({ message: "Conversation deleted successfully" });
-};
-
-const deleteAllConversations = async (req, res) => {
-    const { user } = req;
-    await Message.deleteMany({ $or: [{ fromUser: user._id }, { toUser: user._id }] });
-    res.status(200).json({ message: "All conversations deleted successfully" });
-};
-
-export { getMessages, sendMessage, getMessagedUsers, deleteConversation, deleteAllConversations };
