@@ -4,12 +4,10 @@ import { getMessages, sendMessage, getMessagedUsers, deleteConversation, deleteA
 
 const router = express.Router();
 
+router.get("/", protect, getMessagedUsers);
+router.delete("/", protect, deleteAllConversations);
 router.get("/:otherUserId", protect, getMessages);
 router.post("/:otherUserId", protect, sendMessage);
-
-router.get("/", protect, getMessagedUsers);
 router.delete("/:otherUserId", protect, deleteConversation);
-router.delete("/", protect, deleteAllConversations);
-
 
 export default router;
