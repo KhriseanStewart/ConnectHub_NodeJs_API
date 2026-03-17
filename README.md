@@ -73,6 +73,11 @@ This API is intentionally scoped for a 4–6 week capstone:
 - [x] Connections list
 - [x] Remove connection
 
+## 💬 Messaging
+- [ ] REST messaging routes
+- [ ] Restrict messaging to connected users only
+- [ ] Optional WebSocket gateway for real-time messaging (bonus)
+
 ## 🖼 Cloudflare R2 Uploads
 - [x] Configure R2 client
 - [x] Upload profile photo(s)
@@ -123,6 +128,33 @@ src/
 └── server.js
 
 ---
+
+## 💬 Messaging (Optional WS)
+
+Messaging is only allowed **between users who are already connected** (there must be a `Connection` between them).
+
+### REST routes
+
+- `GET /api/messages/:otherUserId`
+  - Returns the message history between the current user and `otherUserId`.
+  - Checks that the users are connected before returning any data.
+
+- `POST /api/messages/:otherUserId`
+  - Sends a new message from the current user to `otherUserId`.
+  - Validates that the users are connected before inserting the message.
+
+Both routes are protected with `protect` middleware and resolve the connection via the `Connection` model (using the same `pairKey` strategy as requests/connections).
+
+### Optional WebSocket (bonus)
+
+If you want real-time messaging later:
+
+- Add a WebSocket server (or Socket.IO) that:
+  - Authenticates the user using the same JWT/Firebase token.
+  - Only joins a room (e.g. `room:<pairKey>`) if a `Connection` exists for that pair.
+  - Emits new messages to both users when `POST /api/messages/:otherUserId` is called or when a WS message is received.
+
+> For the capstone, the REST messaging routes are sufficient; WebSocket support is a bonus layer on top.
 
 # ⚙️ Setup (Start to Finish)
 
