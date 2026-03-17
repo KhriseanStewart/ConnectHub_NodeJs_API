@@ -12,7 +12,10 @@ export async function connectDB() {
     return mongoose.connection;
   }
   try {
-    const conn = await mongoose.connect(MONGODB_URI);
+    const conn = await mongoose.connect(MONGODB_URI, {
+      serverSelectionTimeoutMS: 10000,
+      connectTimeoutMS: 10000,
+    });
     console.log(`MongoDB connected: ${conn.connection.host}`);
     return conn;
   } catch (err) {
