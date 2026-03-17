@@ -9,6 +9,7 @@ import requestsRoutes from "./routes/requests.routes.js";
 import connectionsRoutes from "./routes/connection.routes.js";
 
 
+import messagesRoutes from "./routes/messages.routes.js";
 dotenv.config();
 
 const app = express();
@@ -24,6 +25,7 @@ app.use("/api/profiles", profilesRoutes);
 app.use("/api/browse", browseRoutes);
 app.use("/api/requests", requestsRoutes);
 app.use("/api/connections", connectionsRoutes);
+app.use("/api/messages", messagesRoutes);
 
 app.use(errorMiddleware);
 
