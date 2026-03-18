@@ -9,7 +9,7 @@ const serverlessHandler = serverless(app, {
 export default async function handler(req, res) {
   try {
     await connectDB();
-    return serverlessHandler(req, res);
+    return app(req, res);
   } catch (err) {
     console.error("[MongoDB] Handler connection error:", err.message);
     if (!res.headersSent) {
