@@ -135,3 +135,29 @@ export const deleteAvatar = asyncHandler(async (req, res) => {
   await profile.save();
   return successResponse(res, { statusCode: 200, message: "Avatar deleted successfully", data: { profile } });
 });
+
+export const uploadPhotoUrl = asyncHandler(async (req, res) => {
+  if (!isConfigured || !r2Client || !publicBaseUrl) {
+    return errorResponse(res, { statusCode: 503, message: "Photo upload is not configured" });
+  }
+  if (!req.file) {
+    return errorResponse(res, { statusCode: 400, message: "No file uploaded. Use field 'photo' with an image (JPEG, PNG, WebP, GIF)" });
+  }
+  const profile = await Profile.findOne({ user: req.user.id });
+  if (!profile) {
+    return errorResponse(res, { statusCode: 404, message: "Profile not found. Create a profile first." });
+  }
+  const key = `photoUrls/${req.user.id}/${Date.now()}`;
+  await r2Client.send(
+    new PutObjectCommand({
+      Bucket: bucketName,
+      Key: key,
+      Body: req.file.buffer,
+      ContentType: req.file.mimetype,
+    })
+  );
+  const url = `${publicBaseUrl.replace(/\/$/, "")}/${key}`;
+  profile.photoUrls = [...(profile.photoUrls || []), url];
+  await profile.save();
+  return successResponse(res, { statusCode: 200, message: "Photo uploaded successfully", data: { profile } });
+});

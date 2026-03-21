@@ -2,6 +2,8 @@
 
 A REST API for **profiles, browsing, connection requests, and connections** to support a Flutter capstone application.
 
+**Route-by-route reference:** see [`docs/API_ROUTES.md`](docs/API_ROUTES.md).
+
 This API is intentionally scoped for a 4–6 week capstone:
 - ❌ No real-time sockets
 - ❌ No advanced moderation systems

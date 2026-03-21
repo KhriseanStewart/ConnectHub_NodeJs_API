@@ -3,6 +3,9 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import { successResponse, errorResponse } from "../utils/response.js";
 import { Message } from "../models/messages.js";
 import { Connection } from "../models/requests.js";
+import { Profile } from "../models/profiles.js";
+import { r2Client, bucketName, publicBaseUrl, isConfigured } from "../config/r2.js";
+import { PutObjectCommand } from "@aws-sdk/client-s3";
 
 const buildPairKey = (userIdA, userIdB) => {
   return [String(userIdA), String(userIdB)].sort().join("_");
@@ -90,10 +93,16 @@ export const getMessagedUsers = asyncHandler(async (req, res) => {
     if (b !== String(currentUserId)) userIds.add(b);
   }
 
+  const profiles = await Profile.find({
+    user: { $in: Array.from(userIds) },
+  }).select("_id");
+
+  const profileIds = profiles.map((profile) => String(profile._id));
+
   return successResponse(res, {
     statusCode: 200,
     message: "Messaged/connected users fetched successfully",
-    data: { userIds: Array.from(userIds) },
+    data: { profileIds },
   });
 });
 
@@ -141,4 +150,36 @@ export const deleteAllConversations = asyncHandler(async (req, res) => {
     statusCode: 200,
     message: "All conversations deleted successfully",
   });
+});
+
+export const uploadMessagePhoto = asyncHandler(async (req, res) => {
+  const { otherUserId } = req.params;
+  const currentUserId = req.user.id;
+  if (!isValidUserId(otherUserId)) {
+    return errorResponse(res, { statusCode: 400, message: "Invalid user ID" });
+  }
+  if (String(otherUserId) === String(currentUserId)) {
+    return errorResponse(res, { statusCode: 400, message: "Cannot upload a message photo to yourself" });
+  }
+  const { connection } = await ensureConnected(currentUserId, otherUserId);
+  if (!connection) {
+    return errorResponse(res, { statusCode: 403, message: "You are not connected with this user" });
+  }
+  if (!isConfigured || !r2Client || !publicBaseUrl) {
+    return errorResponse(res, { statusCode: 503, message: "Photo upload is not configured" });
+  }
+  if (!req.file) {
+    return errorResponse(res, { statusCode: 400, message: "No file uploaded. Use field 'photo' with an image (JPEG, PNG, WebP, GIF)" });
+  }
+  const key = `messagePhotos/${currentUserId}/${otherUserId}/${Date.now()}`;
+  await r2Client.send(
+    new PutObjectCommand({
+      Bucket: bucketName,
+      Key: key,
+      Body: req.file.buffer,
+      ContentType: req.file.mimetype,
+    })
+  );
+  const url = `${publicBaseUrl.replace(/\/$/, "")}/${key}`;
+  return successResponse(res, { statusCode: 200, message: "Photo uploaded successfully", data: { url } });
 });
