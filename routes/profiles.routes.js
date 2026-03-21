@@ -8,27 +8,22 @@ import {
   getProfileByUserId,
   uploadAvatar,
   deleteAvatar,
+  uploadPhotoUrl,
 } from "../controllers/profile.controller.js";
 import { protect } from "../middleware/auth.middleware.js";
-import { uploadAvatar as uploadAvatarMiddleware } from "../middleware/upload.middleware.js";
-import { errorResponse } from "../utils/response.js";
+import { uploadAvatar as uploadAvatarMiddleware, uploadProfilePhoto as uploadPhotoMiddleware } from "../middleware/upload.middleware.js";
 
 const router = express.Router();
-
-const handleUploadError = (err, req, res, next) => {
-  if (err) {
-    return errorResponse(res, { statusCode: 400, message: err.message || "Upload failed" });
-  }
-  next();
-};
 
 router.post("/create", protect, createProfile);
 router.get("/", protect, getProfile);
 router.put("/update", protect, updateProfile);
 router.delete("/delete", protect, deleteProfile);
 
-router.put("/avatar", protect, uploadAvatarMiddleware, handleUploadError, uploadAvatar);
+router.put("/avatar", protect, uploadAvatarMiddleware, uploadAvatar);
 router.delete("/avatar", protect, deleteAvatar);
+
+router.post("/photos", protect, uploadPhotoMiddleware, uploadPhotoUrl);
 
 router.get("/user/:userId", protect, getProfileByUserId);
 

@@ -2,10 +2,6 @@ import app from "../app.js";
 import serverless from "serverless-http";
 import { connectDB } from "../config/db.js";
 
-const serverlessHandler = serverless(app, {
-  binary: false,
-});
-
 export default async function handler(req, res) {
   try {
     await connectDB();
