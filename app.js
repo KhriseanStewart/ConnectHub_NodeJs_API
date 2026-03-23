@@ -7,6 +7,7 @@ import profilesRoutes from "./routes/profiles.routes.js";
 import browseRoutes from "./routes/browse.routes.js";
 import requestsRoutes from "./routes/requests.routes.js";
 import connectionsRoutes from "./routes/connection.routes.js";
+import notificationsRoutes from "./routes/notifications.routes.js";
 
 
 import messagesRoutes from "./routes/messages.routes.js";
@@ -26,6 +27,7 @@ app.use("/api/browse", browseRoutes);
 app.use("/api/requests", requestsRoutes);
 app.use("/api/connections", connectionsRoutes);
 app.use("/api/messages", messagesRoutes);
+app.use("/api/notifications", notificationsRoutes);
 
 app.use(errorMiddleware);
 
