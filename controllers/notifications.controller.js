@@ -121,6 +121,49 @@ export const deleteNotification = asyncHandler(async (req, res) => {
   });
 });
 
+export const createNotification = asyncHandler(async (req, res) => {
+  const userId = req.user.id;
+  const {
+    type,
+    title,
+    body = "",
+    actor = {},
+    resource = {},
+    deeplink = "",
+  } = req.body ?? {};
+
+  if (!type || !String(type).trim()) {
+    return errorResponse(res, { statusCode: 400, message: "type is required" });
+  }
+  if (!title || !String(title).trim()) {
+    return errorResponse(res, { statusCode: 400, message: "title is required" });
+  }
+
+  const notification = await Notification.create({
+    userId,
+    type: String(type).trim(),
+    title: String(title).trim(),
+    body: String(body ?? ""),
+    isRead: false,
+    actor: {
+      id: actor?.id ?? null,
+      displayName: String(actor?.displayName ?? ""),
+      photoUrl: String(actor?.photoUrl ?? ""),
+    },
+    resource: {
+      kind: String(resource?.kind ?? ""),
+      id: String(resource?.id ?? ""),
+    },
+    deeplink: String(deeplink ?? ""),
+  });
+
+  return successResponse(res, {
+    statusCode: 201,
+    message: "Notification created successfully",
+    data: { notification: toNotificationDTO(notification) },
+  });
+});
+
 export const createTestNotification = asyncHandler(async (req, res) => {
   if (process.env.NODE_ENV === "production") {
     return errorResponse(res, {
