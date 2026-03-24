@@ -7,6 +7,7 @@ import { r2Client, bucketName, publicBaseUrl, isConfigured } from "../config/r2.
 export const createProfile = asyncHandler(async (req, res, next) => {
   try {
     const { displayName, bio, location, interests, photoUrls, occupation } = req.body;
+    console.log(req.body);
     if (!displayName || !bio || !location || !interests || !photoUrls || !occupation) {
       return errorResponse(res, { statusCode: 400, message: "All fields are required" });
     }
