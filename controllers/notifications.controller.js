@@ -122,8 +122,9 @@ export const deleteNotification = asyncHandler(async (req, res) => {
 });
 
 export const createNotification = asyncHandler(async (req, res) => {
-  const userId = req.user.id;
+  // const userId = req.user.id;
   const {
+    userId,
     type,
     title,
     body = "",

@@ -6,7 +6,10 @@ export const browseProfiles = asyncHandler(async (req, res, next) => {
     try {
       const { location, interests, occupation } = req.query;
   
-      const filter = { user: { $ne: req.user.id } };
+      const filter = {
+        user: { $ne: req.user.id },
+        location: { $exists: true, $nin: ["", null] },
+      };
   
       if (location) {
         filter.location = location;
